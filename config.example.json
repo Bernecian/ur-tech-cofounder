@@ -1,0 +1,11 @@
+{
+  "$comment": "Copy to docs/cofounder/config.json at your project root to override per-agent models. Defaults are declared in each agent's frontmatter; this file only overrides. Delete an entry to fall back to the default.",
+  "models": {
+    "cofounder": "opus",
+    "design": "opus",
+    "architect-review": "opus",
+    "security-auditor": "opus",
+    "brief-reader": "haiku",
+    "wrapup-writer": "haiku"
+  }
+}

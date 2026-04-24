@@ -1,0 +1,8 @@
+{
+  "name": "cofounder",
+  "version": "0.1.0",
+  "description": "AI tech cofounder — consultant agents, git-backed vault memory, pre-flight grounding. Install once.",
+  "author": {
+    "name": "bernecyan.dev"
+  }
+}

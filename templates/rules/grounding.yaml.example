@@ -1,0 +1,61 @@
+# Cofounder grounding rules
+# Match prompts and file paths → inject docs + run commands BEFORE Claude reasons.
+#
+# How it works:
+#   UserPromptSubmit hook fires → this file is read → matched rules inject docs/commands
+#   as additionalContext. Claude sees this BEFORE writing a single line of code.
+#
+# Schema:
+#   rules:
+#     - name: <human-readable>
+#       match:
+#         keywords: [<case-insensitive substrings of the prompt>]
+#         paths:    [<glob patterns matched against path-like tokens in the prompt>]
+#       load:
+#         - <path relative to project root>     # literal file
+#         - "docs/design/*.md"                  # glob — expanded at match time
+#       run:
+#         - cmd: "<shell command>"
+#           timeout: 2000                       # ms (default 2000)
+#           max_bytes: 4096                     # stdout cap (default 4096)
+#           cache_ttl_ms: 30000                 # per-command override
+#       trust: true                             # REQUIRED to execute run: commands
+#       reason: "<shown to Claude as a one-liner>"
+#
+# A rule fires if ANY keyword matches OR ANY path matches.
+# Budget: 16 KB total across all matched rules (docs + command outputs combined).
+# Commands silently skipped if trust: true is absent.
+
+config:
+  cache_ttl_ms: 60000   # default TTL for all run: commands (1 min)
+
+rules:
+  # ── Example: load CLAUDE.md for any commit-related prompt ─────────────────
+  # - name: project-conventions
+  #   match:
+  #     keywords: [commit, merge, pr, pull request]
+  #   load:
+  #     - CLAUDE.md
+  #   reason: Load project commit conventions before any git-adjacent work.
+
+  # ── Example: load auth docs + grep for secret handling ────────────────────
+  # - name: auth-surface
+  #   match:
+  #     keywords: [auth, login, token, session, jwt, oauth]
+  #     paths: ["**/auth/**", "**/*auth*"]
+  #   load:
+  #     - docs/apps/api/auth.md
+  #   run:
+  #     - cmd: "grep -rn 'SECRET\\|API_KEY\\|password' src/ --include='*.ts' | head -20 || true"
+  #       trust: true
+  #   trust: true
+  #   reason: Ground auth work in the current secret-handling surface.
+
+  # ── Example: load design system for any UI prompt ─────────────────────────
+  # - name: design-system
+  #   match:
+  #     keywords: [ui, design, layout, spacing, typography, font, button, card, screen]
+  #     paths: ["**/*.tsx", "**/components/**", "**/screens/**"]
+  #   load:
+  #     - docs/design-system.md
+  #   reason: Always reference the design system before touching UI.

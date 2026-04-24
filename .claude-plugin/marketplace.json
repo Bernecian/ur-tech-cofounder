@@ -1,0 +1,13 @@
+{
+  "name": "cofounder",
+  "owner": {
+    "name": "bernecyan.dev"
+  },
+  "plugins": [
+    {
+      "name": "cofounder",
+      "source": "./",
+      "description": "AI tech cofounder — consultant-pattern specialists (design, architecture, security, strategy) plus persistent thread context. Main thread codes; agents research and return structured findings."
+    }
+  ]
+}

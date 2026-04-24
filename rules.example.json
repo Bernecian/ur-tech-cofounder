@@ -1,0 +1,143 @@
+{
+  "$comment": "Copy to .cofounder/rules.json at your project root. This is the reconciliation layer — maps task shapes to the project docs and verify rules that apply. The UserPromptSubmit and PreToolUse hooks classify incoming work against these shapes and inject the rules automatically. Start small; add shapes as you notice friction.",
+  "taskShapes": {
+    "ui-fix": {
+      "match": {
+        "prompt": [
+          "ui",
+          "design",
+          "layout",
+          "spacing",
+          "padding",
+          "margin",
+          "typography",
+          "font",
+          "color",
+          "looks",
+          "feels",
+          "polish",
+          "redesign",
+          "screen",
+          "component"
+        ],
+        "path": [
+          "**/*.tsx",
+          "**/components/**/*.ts",
+          "**/screens/**/*.ts",
+          "**/features/**/*.tsx"
+        ]
+      },
+      "load": [
+        "docs/apps/<app>/design-system.md",
+        "CLAUDE.md"
+      ],
+      "verify": [
+        "Uses the design-system type scale (no ad-hoc fontSize: 17)",
+        "Touch targets ≥ 44×44pt",
+        "Left-aligned text unless hero/empty state",
+        "Animations under 250ms unless expressive",
+        "One primary action per screen"
+      ]
+    },
+    "commit": {
+      "match": {
+        "prompt": [
+          "commit",
+          "commit this",
+          "make a commit",
+          "ship it"
+        ],
+        "path": []
+      },
+      "load": [
+        "CLAUDE.md"
+      ],
+      "verify": [
+        "Used `pnpm commit -- --type <type> --scope <scope> --message \"...\"`",
+        "NEVER raw `git commit`",
+        "No Co-Authored-By trailer, no emoji, no AI attribution",
+        "Subject is imperative and lowercase (conventional-commits style)"
+      ]
+    },
+    "security-sensitive": {
+      "match": {
+        "prompt": [
+          "auth",
+          "token",
+          "password",
+          "secret",
+          "credential",
+          "jwt",
+          "oauth",
+          "session",
+          "login",
+          "signup",
+          "encrypt"
+        ],
+        "path": [
+          "**/auth/**",
+          "**/security/**",
+          "**/*auth*.ts",
+          "**/*auth*.tsx"
+        ]
+      },
+      "load": [
+        "docs/apps/<app>/security.md"
+      ],
+      "verify": [
+        "No secrets in logs or error messages",
+        "User input validated at the trust boundary",
+        "Tokens stored in keychain (mobile) or httpOnly+Secure+SameSite cookies (web)",
+        "Consider calling @cofounder:security-auditor before shipping"
+      ]
+    },
+    "database-migration": {
+      "match": {
+        "prompt": [
+          "migration",
+          "alter table",
+          "add column",
+          "drop column",
+          "schema change"
+        ],
+        "path": [
+          "**/migrations/**",
+          "**/*.sql"
+        ]
+      },
+      "load": [
+        "docs/database/migration-playbook.md"
+      ],
+      "verify": [
+        "NOT NULL columns have a backfill plan for existing rows",
+        "Locking behavior checked for large tables",
+        "Rollback path defined",
+        "Consider calling @cofounder:architect-review for schema changes that cross service boundaries"
+      ]
+    },
+    "test-write": {
+      "match": {
+        "prompt": [
+          "write test",
+          "add test",
+          "test for",
+          "test this"
+        ],
+        "path": [
+          "**/*.test.ts",
+          "**/*.test.tsx",
+          "**/*.spec.ts",
+          "**/__tests__/**"
+        ]
+      },
+      "load": [
+        "docs/testing-conventions.md"
+      ],
+      "verify": [
+        "Tests use the project's test runner + assertion style",
+        "No mocked database if integration test",
+        "One assertion per behavior; avoid catch-all snapshots"
+      ]
+    }
+  }
+}

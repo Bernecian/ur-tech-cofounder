@@ -1,0 +1,11 @@
+{
+  "name": "cofounder",
+  "version": "0.1.0",
+  "description": "AI tech cofounder plugin for Claude Code. Consultant agents, git-backed vault memory, pre-flight grounding. Install once.",
+  "engines": { "node": ">=18" },
+  "dependencies": { "yaml": "^2.4.5" },
+  "scripts": { "test": "node --test lib/**/*.test.mjs" },
+  "license": "MIT",
+  "author": "bernecyan.dev",
+  "homepage": "https://github.com/Bernecian/ur-tech-cofounder"
+}

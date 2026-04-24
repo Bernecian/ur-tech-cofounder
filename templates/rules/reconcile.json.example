@@ -1,0 +1,16 @@
+{
+  "$comment": "Task-shape rules. Match prompts/paths → load docs + verify checklists. Injected by hooks automatically. Run /cofounder:regen-rules to generate project-specific shapes.",
+  "taskShapes": {
+    "commit": {
+      "match": {
+        "prompt": ["commit", "commit this", "ship it", "make a commit"]
+      },
+      "load": ["CLAUDE.md"],
+      "verify": [
+        "Followed the project commit workflow from CLAUDE.md",
+        "No Co-Authored-By trailer, no emoji, no AI attribution",
+        "Subject is imperative and lowercase"
+      ]
+    }
+  }
+}
